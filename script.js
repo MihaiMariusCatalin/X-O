@@ -14,12 +14,11 @@ const WINNING_COMBINATIONS = [
     [0, 4, 8],
     [2, 4, 6]
 ];
-let oTurn;
+let currentPlayer;
 startGame();
-restartButton.addEventListener('click', startGame);
 
 function startGame() {
-    oTurn = false;
+    currentPlayer = X_CLASS;
     cells.forEach(cell => {
         cell.classList.remove(X_CLASS, O_CLASS);
         cell.textContent = '';
@@ -31,9 +30,8 @@ function startGame() {
 
 function handleClick(e) {
     const cell = e.target;
-    const currentClass = oTurn ? O_CLASS : X_CLASS;
-    placeMark(cell, currentClass);
-    if (checkWin(currentClass)) {
+    placeMark(cell, currentPlayer);
+    if (checkWin(currentPlayer)) {
         endGame(false);
     } else if (isDraw()) {
         endGame(true);
@@ -46,7 +44,11 @@ function endGame(draw) {
     if (draw) {
         messageElement.textContent = 'Draw!';
     } else {
-        messageElement.textContent = `${oTurn ? "O" : "X"} Wins!`;
+        if (currentPlayer === O_CLASS) {
+            messageElement.textContent = 'O Wins!';
+        } else {
+            messageElement.textContent = 'X Wins!';
+        }
     }
     messageElement.classList.remove('hidden');
     restartButton.classList.remove('hidden');
@@ -64,7 +66,11 @@ function placeMark(cell, currentClass) {
 }
 
 function swapTurns() {
-    oTurn = !oTurn;
+    if (currentPlayer === X_CLASS) {
+        currentPlayer = O_CLASS;
+    } else {
+        currentPlayer = X_CLASS;
+    }
 }
 
 function checkWin(currentClass) {
